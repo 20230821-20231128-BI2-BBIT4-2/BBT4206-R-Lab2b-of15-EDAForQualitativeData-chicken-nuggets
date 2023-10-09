@@ -1,7 +1,7 @@
 ---
-title: "Business Intelligence Lab Submission Markdown"
-author: "<Specify your group name here>"
-date: "<Specify the date when you submitted the lab>"
+title: "Business Intelligence Lab 2b Submission Markdown"
+author: "Chicken-nuggets"
+date: "9/10/2023"
 output:
   github_document: 
     toc: yes
@@ -18,17 +18,17 @@ editor_options:
 +---------------------------------------------------+------------------------------------------------------------------------------------------------------+
 | **Student ID Numbers and Names of Group Members** | *\<list one student name, group, and ID per line; you should be between 2 and 5 members per group\>* |
 |                                                   |                                                                                                      |
-|                                                   | 1.  ID - Group - Name                                                                                |
+|                                                   | 1.  137118 - C -  Fatoumata Camara                                                                   |
 |                                                   |                                                                                                      |
-|                                                   | 2.  ID - Group - Name                                                                                |
+|                                                   | 2.  127602 - C - Trevor Anjere                                                                       |
 |                                                   |                                                                                                      |
-|                                                   | 3.  ID - Group - Name                                                                                |
+|                                                   | 3.  127039 - C - Ayan Ahmed                                                                          |
 |                                                   |                                                                                                      |
-|                                                   | 4.  ID - Group - Name                                                                                |
+|                                                   | 4.  136869 - C - Birkanwhal Bhambra                                                                  |
 |                                                   |                                                                                                      |
-|                                                   | 5.  ID - Group - Name                                                                                |
+|                                                   | 5.  133824 - C - Habiba Siba                                                                         |
 +---------------------------------------------------+------------------------------------------------------------------------------------------------------+
-| **GitHub Classroom Group Name**                   |                                                                                                      |
+| **GitHub Classroom Group Name**                   | Chicken-Nuggets                                                                                           |
 +---------------------------------------------------+------------------------------------------------------------------------------------------------------+
 | **Course Code**                                   | BBT4206                                                                                              |
 +---------------------------------------------------+------------------------------------------------------------------------------------------------------+
@@ -66,40 +66,435 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, eval = TRUE,
 > editor_options:\
 > chunk_output_type: console
 
-# \<Provide an Appropriate Title Here\>
+# \<Lab 2b - Visualization Explanations>
+#\<Course Evaluation rating per group and per Gender>
 
-Describe the code chunk here:
-
-```{r Your Second Code Chunk}
-# Fill this with R related code that will be executed when the R markdown file
+```{1. Course Evaluation rating per group and per gender} 
+# The code creates a bar plot using the ggplot2 package to visualize course evaluation ratings per group and per Gender
+evaluation_per_group_per_gender %>%
+  ggplot() + #pipes the data frame into the ggplot() function and initializes a new visualization
+  geom_bar(aes(x = class_group, y = average_evaluation_rating,
+               fill = `Student's Gender`),# Adds bars and specifies the x-axis and y-axis and the colors of different bars based on gender
+           stat = "identity", position = "dodge") + #values should be used as is and the bars should be placed side by side for each class group.
+  expand_limits(y = 0) + #sets the lower limit of the y-axis as 0
+  blue_grey_theme() + #applies custom theme to the plot
+  scale_fill_manual(values = blue_grey_colours_2) +
+  ggtitle("Course Evaluation Rating per Group and per Gender") + #sets the title of the plot
+  labs(x = "Class Group", y = "Average Rating") #sets labels for the x and y axes
 # is rendered using knitR
 library(readr)
 ```
 
-Describe the next code chunk here:
+##\<Most frequently used words in course Evaluation Likes for Female students\>
 
-```{r Your Third Code Chunk}
-# Fill this with other R related code that will be executed when the R markdown
+```{2.Most frequently used words in course Evaluation Likes for Female students}
+# Creates a horizontal bar plot for the data 
+evaluation_likes_filtered %>% #pipes the data frame into a series of operations
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% #selects four columns from the data frame
+  filter(`Student's Gender` == "Female") %>% #Filters the data to include rows where the gender is female
+  count(`Likes (tokenized)`, sort = TRUE) %>% #Counts the frequency of each value and sorts in descending order
+  top_n(9) %>% #Selects the top 9 words from the count above
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders te Likes(tokenized) column based on the frequency count
+  ggplot() + #Initializes a new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds bars to the plot and specifies the x and y axes  and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #Sets the labels for the x axis
+  ylab("Number of Times Used (Term Frequency)") + #Sets the labels for the x axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Female
+          Students") + # sets the title
+  coord_flip() #Flips the coordinates to make it a horizontal plot
 # file is rendered using knitR
 library(readr)
 ```
 
-## \<You Can Have a Sub-Title Here\>
+## \<Most frequently used words in course Evaluation Likes for Male students\>
 
-```{r Your Fourth Code Chunk}
-# Fill this with other R related code that will be executed when the R markdown
+```{3.Most frequently used words in course Evaluation Likes for Male students}
+# Creates a horizontal bar plot for the data 
+evaluation_likes_filtered %>% #pipes the data frame into a series of operations
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% #selects four columns from the data frame
+  filter(`Student's Gender` == "Male") %>% #Filters the data to include rows where the gender is Male
+  count(`Likes (tokenized)`, sort = TRUE) %>% #Counts the frequency of each value and sorts in descending order
+  top_n(9) %>% #Selects the top 9 words from the count above
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders the Likes(tokenized) column based on the frequency count
+  ggplot() + #Initializes a new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds bars to the plot and specifies the x and y axes  and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #Sets the labels for the x axis
+  ylab("Number of Times Used (Term Frequency)") + #Sets the labels for the x axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Male
+          Students") + # sets the title
+  coord_flip() #Flips the coordinates to make it a horizontal plot
 # file is rendered using knitR
 library(readr)
 ```
 
-# \<You can Provide Another Appropriate Title Here\>
+## \<Most Frequently Used Words in Course Evaluation Likes Per Gender\>
 
-Describe the code chunk here:
 
-```{r Your Fifth Code Chunk}
-# Fill this with R related code that will be executed when the R markdown file
+```{4. Most Frequently Used Words in Course Evaluation Likes Per Gender}
+# Creates a grouped bar plot for both genders
+popular_words %>% #Pipes data frame
+  ggplot(aes(row, n, fill = `Student's Gender`)) + #Initializes a plot and specifies the x and y axes and creates grouped bars for each word and differentiates by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds bars and specifies the colors
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") + #Sets the label for both axes
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes per Gender") + #Sets the plots title
+  facet_wrap(~`Student's Gender`, scales = "free") + #Groups the plot into separate plots for each gender
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Likes (tokenized)`) + #Specifies the breaks and labels for the x axis
+  coord_flip() #Flips the coordinates to make it a horizontal bar 
 # is rendered using knitR
 library(readr)
 ```
 
-**etc.** as per the lab submission requirements.
+## \<Most Frequently Used Words in Course Evaluation Likes for Group A Students\>
+
+```{5.Most Frequently Used Words in Course Evaluation Likes for Group A Students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "A") %>% # Filter data to only include rows where Class Group is A
+  count(`Likes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group A
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Frequently Used Words in Course Evaluation Likes for Group B Students\>
+
+```{6.Most Frequently Used Words in Course Evaluation Likes for Group B Students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "B") %>% # Filter data to only include rows where Class Group is B
+  count(`Likes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group B
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Frequently Used Words in Course Evaluation Likes for Group C Students\>
+
+```{7.Most Frequently Used Words in Course Evaluation Likes for Group C Students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "C") %>% # Filter data to only include rows where Class Group is C
+  count(`Likes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group C
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Frequently used words inCourse Evaluation Likes per class Group\>
+
+```{8. Most Frequently used words inCourse Evaluation Likes per class Group}
+# Fill this with R related code that will be executed when the R markdown file
+popular_words %>% #Pipes data frame
+  ggplot(aes(row, n, fill = `Class Group`)) + #Initializes a plot and specifies the x and y axes and creates grouped bars for each word and differentiates by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds bars and specifies the colors
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") + #Sets the label for both axes
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes per Class Group") + #Sets the plot's title
+  facet_wrap(~`Class Group`, scales = "free") + #Groups the plot into separate plots for each gender
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Likes (tokenized)`) + #Specifies the breaks and labels for the x axis
+  coord_flip() #Flips the coordinates to make it a horizontal bar 
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes for Female students\>
+
+```{9.Most frequently used words in course Evaluation Wishes for Female students}
+# Fill this with R related code that will be executed when the R markdown file
+# Creates a horizontal bar plot for the data 
+evaluation_likes_filtered %>% #pipes the data frame into a series of operations
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% #selects four columns from the data frame
+  filter(`Student's Gender` == "Female") %>% #Filters the data to include rows where the gender is female
+  count(`Wishes (tokenized)`, sort = TRUE) %>% #Counts the frequency of each value and sorts in descending order
+  top_n(9) %>% #Selects the top 9 words from the count above
+  mutate(`Wishes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>% #reorders the Wishes(tokenized) column based on the frequency count
+  ggplot() + #Initializes a new plot
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds bars to the plot and specifies the x and y axes  and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #Sets the labels for the x axis
+  ylab("Number of Times Used (Term Frequency)") + #Sets the labels for the x axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Female
+          Students") + # sets the title
+  coord_flip() #Flips the coordinates to make it a horizontal plot
+# file is rendered using knitR
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes for Male students\>
+
+```{10.Most frequently used words in course Evaluation Wishes for Male students}
+# Fill this with R related code that will be executed when the R markdown file
+# Creates a horizontal bar plot for the data 
+evaluation_likes_filtered %>% #pipes the data frame into a series of operations
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>% #selects four columns from the data frame
+  filter(`Student's Gender` == "Male") %>% #Filters the data to include rows where the gender is Male
+  count(`Wishes (tokenized)`, sort = TRUE) %>% #Counts the frequency of each value and sorts in descending order
+  top_n(9) %>% #Selects the top 9 words from the count above
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>% #reorders the Wishes(tokenized) column based on the frequency count
+  ggplot() + #Initializes a new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds bars to the plot and specifies the x and y axes  and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #Sets the labels for the x axis
+  ylab("Number of Times Used (Term Frequency)") + #Sets the labels for the x axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Male
+          Students") + # sets the title
+  coord_flip() #Flips the coordinates to make it a horizontal plot
+# file is rendered using knitR
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes per Gender\>
+
+```{11.Most frequently used words in course Evaluation Wishes per Gender}
+# Fill this with R related code that will be executed when the R markdown file
+# Creates a grouped bar plot for both genders
+popular_words <- evaluation_wishes_filtered %>%
+  group_by(`Student's Gender`) %>%
+  count(`Wishes (tokenized)`, `Student's Gender`, sort = TRUE) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Student's Gender`, n) %>%
+  mutate(row = row_number())  
+
+popular_words %>% #Pipes data frame
+  ggplot(aes(row, n, fill = `Student's Gender`)) + #Initializes a plot and specifies the x and y axes and creates grouped bars for each word and differentiates by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds bars and specifies the colors
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") + #Sets the label for both axes
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes per Gender") + #Sets the plots title
+  facet_wrap(~`Student's Gender`, scales = "free") + #Groups the plot into separate plots for each gender
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Wishes (tokenized)`) + #Specifies the breaks and labels for the x axis
+  coord_flip() #Flips the coordinates to make it a horizontal bar 
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes for Group A students\>
+
+```{12.Most frequently used words in course Evaluation Wishes for Group A students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "A") %>% # Filter data to only include rows where Class Group is A
+  count(`Wishes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group A
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes for Group B students\>
+
+```{13.Most frequently used words in course Evaluation Wishes for Group B students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "B") %>% # Filter data to only include rows where Class Group is B
+  count(`Wishes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group B
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes for Group C students\>
+
+```{14.Most frequently used words in course Evaluation Wishes for Group C students}
+# Fill this with R related code that will be executed when the R markdown file
+evaluation_likes_filtered %>% #Pipes data into data frame
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>% # Selects 4 columns from the data frame
+  filter(`Class Group` == "C") %>% # Filter data to only include rows where Class Group is C
+  count(`Wishes (tokenized)`, sort = TRUE) %>% # Counts frequency of each unique value in the Likes(tokenized) column and sorts in descending order
+  top_n(9) %>% #selects top 9 most frequently used words based on count
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>% #reorders column based on frequency count
+  ggplot() + #Initializes new plot
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) + #Adds a bar, specifies what the x and y axes should represent and the colors the bars should be filled in
+  blue_grey_theme() + #Applies a custom theme to the plot
+  xlab("Word in Course Evaluation") + #sets label for X axis
+  ylab("Number of Times Used (Term Frequency)") + #sets label for the y axis
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group C
+          Students") + #sets the title of the plot
+  coord_flip() #Flips the coordinate to make a  horizontal bar plot
+
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most frequently used words in course Evaluation Wishes per Class Group\>
+
+```{15.Most frequently used words in course Evaluation Wishes per Class Group}
+# Fill this with R related code that will be executed when the R markdown file
+popular_words %>% #Pipes data frame
+  ggplot(aes(row, n, fill = `Class Group`)) + #Initializes a plot and specifies the x and y axes and creates grouped bars for each word and differentiates by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds bars and specifies the colors
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") + #Sets the label for both axes
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes per Gender") + #Sets the plots title
+  facet_wrap(~`Class Group`, scales = "free") + #Groups the plot into separate plots for each gender
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Wishes (tokenized)`) + #Specifies the breaks and labels for the x axis
+  coord_flip() #Flips the coordinates to make it a horizontal bar 
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Important words by TF-IDF Score in Course Evaluation Likes Per Gender\>
+
+```{16. Most Important words by TF-IDF Score in Course Evaluation Likes Per Gender}
+# Fill this with R related code that will be executed when the R markdown file
+top_popular_tfidf_words %>% #Pipes data into data frame
+  ggplot(aes(x = row, tf_idf, fill = `Student's Gender`)) + #Initializes a plot object, fills color, creates grouped bars for each word and differentiates them by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds a bar to the plot and specifies the color.
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") + #Sets the label for X and Y axes 
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Likes per 
+      Gender") + #Sets the title for the plot
+  facet_wrap(~`Student's Gender`, scales = "free") + #Groups the plot into separate for the genders 
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Likes (tokenized)`) + # specifies the breaks and labels for the breaks and labels
+  coord_flip() #Flips the coordinates to make the plot horizontal
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Important words by TF-IDF Score in Course Evaluation Likes Per Class Group\>
+
+```{17. Most Important words by TF-IDF Score in Course Evaluation Likes Per Class Group}
+# Fill this with R related code that will be executed when the R markdown file
+top_popular_tfidf_words %>% #Pipes data into data frame
+  ggplot(aes(x = row, tf_idf, fill = `Class Group`)) + #Initializes a plot object, fills color, creates grouped bars for each word and differentiates them by Class Group
+  geom_col(fill = blue_grey_colours_1) + #Adds a bar to the plot and specifies the color.
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") + #Sets the label for X and Y axes 
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Likes per 
+      Gender") + #Sets the title for the plot
+  facet_wrap(~`Class Group`, scales = "free") + #Groups the plot into separate for the genders 
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Likes (tokenized)`) + # specifies the breaks and labels for the breaks and labels
+  coord_flip() #Flips the coordinates to make the plot horizontal
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Important words by TF-IDF Score in Course Evaluation Wishes Per Gender\>
+
+```{18. Most Important words by TF-IDF Score in Course Evaluation Wishes Per Gender}
+# Fill this with R related code that will be executed when the R markdown file
+top_popular_tfidf_words %>% #Pipes data into data frame
+  ggplot(aes(x = row, tf_idf, fill = `Student's Gender`)) + #Initializes a plot object, fills color, creates grouped bars for each word and differentiates them by gender
+  geom_col(fill = blue_grey_colours_1) + #Adds a bar to the plot and specifies the color.
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") + #Sets the label for X and Y axes 
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation wishes per 
+      Gender") + #Sets the title for the plot
+  facet_wrap(~`Student's Gender`, scales = "free") + #Groups the plot into separate for the genders 
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Wishes (tokenized)`) + # specifies the breaks and labels for the breaks and labels
+  coord_flip() #Flips the coordinates to make the plot horizontal
+# is rendered using knitR
+library(readr)
+```
+
+## \<Most Important words by TF-IDF Score in Course Evaluation Likes Per Class Group\>
+
+```{19. Most Important words by TF-IDF Score in Course Evaluation Likes Per Class Group}
+# Fill this with R related code that will be executed when the R markdown file
+top_popular_tfidf_words %>% #Pipes data into data frame
+  ggplot(aes(x = row, tf_idf, fill = `Class Group`)) + #Initializes a plot object, fills color, creates grouped bars for each word and differentiates them by Class Group
+  geom_col(fill = blue_grey_colours_1) + #Adds a bar to the plot and specifies the color.
+  blue_grey_theme() + #Applies a custom theme to the plot
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") + #Sets the label for X and Y axes 
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation wishes per 
+      Gender") + #Sets the title for the plot
+  facet_wrap(~`Class Group`, scales = "free") + #Groups the plot into separate for the genders 
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Wishes (tokenized)`) + # specifies the breaks and labels for the breaks and labels
+  coord_flip() #Flips the coordinates to make the plot horizontal
+# is rendered using knitR
+library(readr)
+```
+
+
+
