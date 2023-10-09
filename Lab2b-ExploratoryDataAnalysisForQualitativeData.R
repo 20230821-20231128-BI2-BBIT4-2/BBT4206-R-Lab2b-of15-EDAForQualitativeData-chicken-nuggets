@@ -555,7 +555,7 @@ evaluation_likes_and_wishes <- student_performance_dataset %>%
   mutate(`Student's Gender` =
            ifelse(gender == 1, "Male", "Female")) %>%
   rename(`Class Group` = class_group) %>%
-  rename(Likes = `D - 1. \nWrite two things you like about the teaching and learning in this unit so far.`) %>% # nolint
+  rename(Likes = `D - 1. Write two things you like about the teaching and learning in this unit so far.`) %>% # nolint
   rename(Wishes = `D - 2. Write at least one recommendation to improve the teaching and learning in this unit (for the remaining weeks in the semester)`) %>% # nolint
   select(`Class Group`,
          `Student's Gender`, `Average Course Evaluation Rating`,
@@ -1209,7 +1209,7 @@ top_popular_tfidf_words %>%
   labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
   ggtitle("Important Words using TF-IDF by Chart Level") +
   ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Likes per 
-      Class Group") +
+      Gender") +
   facet_wrap(~`Student's Gender`, scales = "free") +
   scale_x_continuous(
                      breaks = top_popular_tfidf_words$row,
@@ -1290,7 +1290,7 @@ top_popular_tfidf_words %>%
   labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
   ggtitle("Important Words using TF-IDF by Chart Level") +
   ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Wishes per 
-      Class Group") +
+      Gender") +
   facet_wrap(~`Student's Gender`, scales = "free") +
   scale_x_continuous(
                      breaks = top_popular_tfidf_words$row,
